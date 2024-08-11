@@ -15,7 +15,6 @@ export const getWeather = createAsyncThunk(
         `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m&forecast_days=1`
       );
       let { temperature_2m } = response.data.hourly;
-      console.log(response.data);
 
       let temperature = [];
 
@@ -43,11 +42,11 @@ const weatherSlice = createSlice({
     builder.addCase(getWeather.pending, (state, action) => {
       console.log("loading...");
     });
-    builder.addCase(getWeather.fulfilled),
-      (state, action) => {
-        console.log("End loading");
-        console.log(action.payload);
-      };
+    builder.addCase(getWeather.fulfilled, (state, action) => {
+      console.log("End loading");
+      console.log(action.payload);
+    });
+
     builder.addCase(getWeather.rejected, (state, action) => {
       console.log("End loading");
       alert(action.error.message);
