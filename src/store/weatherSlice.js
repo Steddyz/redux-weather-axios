@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { IconType } from "../utils/IconType";
 
 export const getWeather = createAsyncThunk(
   "weather/getWeather",
@@ -21,17 +22,17 @@ export const getWeather = createAsyncThunk(
         let iconType = "";
         iconType =
           cloud_cover > 50
-            ? "heavy cloud"
+            ? IconType.HEAVY_CLOUD
             : cloud_cover > 30
-            ? "moderate cloud"
-            : "light cloud";
+            ? IconType.MODERATE_CLOUD
+            : IconType.LIGHT_CLOUD;
         iconType =
           rain > 7.6
-            ? "heavy rain"
+            ? IconType.HEAVY_RAIN
             : rain > 2.5
-            ? "moderate rain"
+            ? IconType.MODERATE_RAIN
             : rain > 1
-            ? "light_rain"
+            ? IconType.LIGHT_RAIN
             : iconType;
         return iconType;
       };
@@ -42,6 +43,8 @@ export const getWeather = createAsyncThunk(
           time: `${i}:00`,
           temp: temperature_2m[i],
           iconType: getIconType(rain[i], cloud_cover[i]),
+          isLoading: false,
+          error: "",
         });
       }
 
@@ -60,16 +63,18 @@ const weatherSlice = createSlice({
 
   extraReducers(builder) {
     builder.addCase(getWeather.pending, (state, action) => {
-      console.log("loading...");
+      state.isLoading = true;
+      state.error = "";
     });
     builder.addCase(getWeather.fulfilled, (state, action) => {
-      console.log("End loading");
+      state.isLoading = false;
       state.data = action.payload;
+      state.error = "";
     });
 
     builder.addCase(getWeather.rejected, (state, action) => {
-      console.log("End loading");
-      alert(action.error.message);
+      state.isLoading = false;
+      state.error = action.error.message;
     });
   },
 });
