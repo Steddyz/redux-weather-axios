@@ -4,7 +4,7 @@
 
 body,
 :root {
-  @apply w-full h-full flex justify-center items-center main-gradient;
+  @apply w-full h-full flex justify-center items-center main-gradient text-purple-950;
 }
 
 .main-gradient {
